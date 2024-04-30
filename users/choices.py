@@ -1,6 +1,6 @@
 from django.utils.translation import gettext as _
 
-jenis_kelamin = (
+gender = (
     ("L", _("Male")),
     ("P", _("Female"))
 )
@@ -16,7 +16,7 @@ jenis_kelamin = (
 #     )
 
 
-pilih_kelas = (
+class_list = (
         ('X-MIPA-A', 'X-A'),
         ('X-MIPA-B', 'X-B'),
         ('X-MIPA-C', 'X-C'),

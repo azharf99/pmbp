@@ -1,11 +1,11 @@
 from django.utils.translation import gettext as _
 
-jenis = (
+extracurricular_types = (
         ("Ekskul", _("Extracurricular")),
         ("SC", _("Study Club"))
     )
 
-pilihan_waktu = (
+extracurricular_times = (
         ("Pagi", _("Morning")),
         ("Siang", _("Evening"))
         ("Sore", _("Afternoon")),

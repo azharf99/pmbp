@@ -1,11 +1,12 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext as _
-from utilities.utils import CompressedImageField
 from django.utils.dates import WEEKDAYS
 from django.utils.text import slugify
-from users.models import Students, Teacher
-from choices import jenis, pilihan_waktu
+from users.models import Student, Teacher
+from choices import extracurricular_types, extracurricular_times
+from utilities.utils import CompressedImageField
 # Create your models here.
 
 
@@ -13,9 +14,9 @@ class Extracurricular(models.Model):
     extracurricular_name = models.CharField(max_length=50, verbose_name=_("Extracurricular Name"))
     extracurricular_teacher = models.ManyToManyField(Teacher, verbose_name=_("Extracurricular Teacher"))
     extracurricular_schedule = models.CharField(max_length=15, choices=WEEKDAYS, verbose_name=_("Extracurricular Schedule"))
-    extracurricular_time = models.CharField(max_length=15, choices=pilihan_waktu, verbose_name=_("Extracurricular Iime"))
+    extracurricular_time = models.CharField(max_length=15, choices=extracurricular_times, verbose_name=_("Extracurricular Iime"))
     extracurricular_description = models.TextField(blank=True, null=True, verbose_name=_("Extracurricular Description"))
-    extracurricular_type = models.CharField(max_length=20, choices=jenis, blank=True, verbose_name=_("Extracurricular Type"))
+    extracurricular_type = models.CharField(max_length=20, choices=extracurricular_types, blank=True, verbose_name=_("Extracurricular Type"))
     extracurricular_logo = CompressedImageField(upload_to='ekskul/logo', default='no-image.png', blank=True, null=True, quality=50, help_text="format logo .jpg/.jpeg", verbose_name=_("Extracurricular Logo"))
     slug = models.SlugField(blank=True, verbose_name=_("Extracurricular Slug"))
     created_at = models.DateTimeField(auto_now_add=True)
@@ -43,10 +44,13 @@ class Extracurricular(models.Model):
 
 class StudentExtracurricular(models.Model):
     extracurricular = models.ForeignKey(Extracurricular, on_delete=models.CASCADE)
-    student = models.ForeignKey(Students, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    academic_year = models.CharField(max_length=50, default=f"{timezone.now().year}/{timezone.now().year+1}", verbose_name=_("Academic Year"))
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "%s | %s" % (self.ekskul, self.siswa)
+        return f"{self.extracurricular} {self.student}"
 
     def get_absolute_url(self):
         return reverse("extracurricular:student-extracurricular-index")
