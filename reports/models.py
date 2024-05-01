@@ -5,7 +5,7 @@ from django.utils.translation import gettext as _
 from users.models import Teacher
 from extracurricular.models import Extracurricular, StudentExtracurricular
 from utilities.utils import CompressedImageField
-
+from utilities.filenames import get_upload_file_name
 
 # Create your models here.
 
@@ -15,7 +15,7 @@ class Report(models.Model):
     report_date = models.DateField(verbose_name=_("Report Date"))
     report_note = models.TextField(max_length=200, blank=True, verbose_name=_("Report Note"))
     students = models.ManyToManyField(StudentExtracurricular, verbose_name=_("Students"))
-    report_photo = CompressedImageField(upload_to='ekskul/laporan', default='no-image.png', quality=50, help_text="Format foto .jpg atau .jpeg", verbose_name=_("Report Photo"))
+    report_photo = CompressedImageField(upload_to=get_upload_file_name('ekskul/laporan'), default='no-image.png', quality=50, help_text=_("photo format png/jpg"), verbose_name=_("Report Photo"))
     academic_year = models.CharField(max_length=50, default=f"{timezone.now().year}/{timezone.now().year+1}", verbose_name=_("Academic Year"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

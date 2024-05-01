@@ -5,8 +5,10 @@ from django.utils.translation import gettext as _
 from django.utils.dates import WEEKDAYS
 from django.utils.text import slugify
 from users.models import Student, Teacher
-from choices import extracurricular_types, extracurricular_times
+from utilities.choices import extracurricular_types, extracurricular_times
 from utilities.utils import CompressedImageField
+from utilities.filenames import get_upload_file_name
+
 # Create your models here.
 
 
@@ -17,7 +19,7 @@ class Extracurricular(models.Model):
     extracurricular_time = models.CharField(max_length=15, choices=extracurricular_times, verbose_name=_("Extracurricular Iime"))
     extracurricular_description = models.TextField(blank=True, null=True, verbose_name=_("Extracurricular Description"))
     extracurricular_type = models.CharField(max_length=20, choices=extracurricular_types, blank=True, verbose_name=_("Extracurricular Type"))
-    extracurricular_logo = CompressedImageField(upload_to='ekskul/logo', default='no-image.png', blank=True, null=True, quality=50, help_text="format logo .jpg/.jpeg", verbose_name=_("Extracurricular Logo"))
+    extracurricular_logo = CompressedImageField(upload_to=get_upload_file_name('ekskul/logo'), default='no-image.png', blank=True, null=True, quality=50, help_text=_("photo format png/jpg"), verbose_name=_("Extracurricular Logo"))
     slug = models.SlugField(blank=True, verbose_name=_("Extracurricular Slug"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

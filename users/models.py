@@ -4,11 +4,10 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.urls import reverse
 from utilities.utils import CompressedImageField
-from choices import gender, class_list
-from time import time
+from utilities.choices import gender, class_list
+from utilities.filenames import get_upload_file_name
 
-def get_upload_file_name(instance, filename, folder=""):
-    return "%s/%s_%s" % (folder, str(time()).replace('.','_'), filename)
+
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("Username"))
@@ -20,7 +19,7 @@ class Teacher(models.Model):
     teacher_job = models.CharField(max_length=100, blank=True, verbose_name=_("Teacher Job"))
     teacher_email = models.EmailField(default='smaitalbinaa.ekskul@outlook.com', blank=True, verbose_name=_("Teacher Email"))
     teacher_phone = models.CharField(max_length=50, blank=True, default=0, verbose_name=_("Teacher Phone"))
-    teacher_photo = CompressedImageField(upload_to=get_upload_file_name(folder='teacher'), default='blank-profile.png', blank=True, null=True, help_text="format foto .jpg/.jpeg", verbose_name=_("Teacher Photo"))
+    teacher_photo = CompressedImageField(upload_to=get_upload_file_name('teacher'), default='blank-profile.png', blank=True, null=True, quality=50, help_text=_("photo format png/jpg"), verbose_name=_("Teacher Photo"))
     is_active = models.BooleanField(default=True, verbose_name=_("Teacher Active Status"))
     is_online = models.BooleanField(default=False, verbose_name=_("Teacher Online Status"))
     created_at = models.DateTimeField(auto_now_add=True)
@@ -57,7 +56,7 @@ class Student(models.Model):
     student_email = models.EmailField(max_length=50, blank=True, null=True, verbose_name=_("Student's Email"))
     student_phone = models.CharField(max_length=50, blank=True, null=True, verbose_name=_("Student's Phone"))
     student_status = models.CharField(max_length=50, blank=True, default="Aktif", verbose_name=_("Student's Status"))
-    student_photo = CompressedImageField(upload_to=get_upload_file_name(folder='student'), blank=True, null=True, default='blank-profile.png', help_text="Format foto .jpg/.jpeg", verbose_name=_("Student's Photo"))
+    student_photo = CompressedImageField(upload_to=get_upload_file_name('student'), blank=True, null=True, default='blank-profile.png', quality=50, help_text=_("photo format png/jpg"), verbose_name=_("Student's Photo"))
     student_batch = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name=_("Student's Batch"))
     academic_year = models.CharField(max_length=50, default=f"{timezone.now().year}/{timezone.now().year+1}", verbose_name=_("Academic Year"))
     created_at = models.DateTimeField(auto_now_add=True)
@@ -76,7 +75,7 @@ class Student(models.Model):
         ]
         verbose_name = _("Student")
         verbose_name_plural = _("Students")
-        ordering = ["student_class__full_name", "student_name"]
+        ordering = ["student_class", "student_name"]
         db_table = "students"
 
 

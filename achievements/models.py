@@ -1,8 +1,9 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from utilities.utils import CompressedImageField
 from users.models import Student
-from django.utils.translation import gettext as _
+from utilities.filenames import get_upload_file_name
 
 # Create your models here.
 class Achievement(models.Model):
@@ -17,7 +18,7 @@ class Achievement(models.Model):
     competition_date = models.CharField(max_length=10, verbose_name=_("Competition Date"))
     competition_organizer = models.CharField(max_length=100, verbose_name=_("Achievement Organizer"))
     school = models.CharField(max_length=100, default="SMAS IT Al Binaa", verbose_name=_("School"))
-    certificate = models.FileField(upload_to='prestasi/sertifikat', null=True, blank=True, verbose_name=_("Achievement Certificate"), help_text=_("file format pdf/jpg"))
+    certificate = models.FileField(upload_to=get_upload_file_name('prestasi/sertifikat'), null=True, blank=True, verbose_name=_("Achievement Certificate"), help_text=_("file format pdf/jpg"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -38,8 +39,8 @@ class Achievement(models.Model):
 
 
 class AchievementPhoto(models.Model):
-    achievement = models.ForeignKey('Prestasi', on_delete=models.CASCADE, verbose_name=_("Achievement"))
-    achievement_photo = CompressedImageField(upload_to='prestasi', blank=True, null=True, default='no-image.png', verbose_name=_("Achievement Photo"))
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE, verbose_name=_("Achievement"))
+    achievement_photo = CompressedImageField(upload_to=get_upload_file_name('prestasi'), blank=True, null=True, default='no-image.png', quality=50, help_text=_("photo format png/jpg"), verbose_name=_("Achievement Photo"))
     achievement_notes = models.TextField(max_length=300, blank=True, null=True, default="", verbose_name=_("Achievement Notes"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

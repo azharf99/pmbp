@@ -17,12 +17,31 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from users.views import UserViewSet, GroupViewSet
+from users.views import UserViewSet, GroupViewSet, TeacherViewSet, StudentViewSet
+from reports.views import ReportViewSet
+from olympiads.views import OlympiadFieldViewSet, OlympiadReportViewSet, OlympiadStudentViewSet
+from menus.views import MenuViewSet
+from grades.views import GradeViewSet
+from extracurricular.views import ExtracurricularViewSet, StudentExtracurricularViewSet
+from achievements.views import AchievementViewSet, AchievementPhotoViewSet, AchievementProgramViewSet
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
+router.register(r'students', StudentViewSet)
+router.register(r'teachers', TeacherViewSet)
+router.register(r'reports', ReportViewSet)
+router.register(r'olympiads', OlympiadFieldViewSet)
+router.register(r'olympiads_reports', OlympiadReportViewSet)
+router.register(r'olympiads_students', OlympiadStudentViewSet)
+router.register(r'menus', MenuViewSet)
+router.register(r'grades', GradeViewSet)
+router.register(r'extracurricular', ExtracurricularViewSet)
+router.register(r'extracurricular_students', StudentExtracurricularViewSet)
+router.register(r'achievements', AchievementViewSet)
+router.register(r'achievements_photos', AchievementPhotoViewSet)
+router.register(r'achievements_program', AchievementProgramViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

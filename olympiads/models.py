@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from extracurricular.models import Teacher, Student
 from utilities.utils import CompressedImageField
+from utilities.filenames import get_upload_file_name
+
 
 # Create your models here.
 
@@ -31,7 +33,7 @@ class OlympiadField(models.Model):
 
 
 class OlympiadStudent(models.Model):
-    olympiad_field = models.ForeignKey('BidangOSN', on_delete=models.CASCADE, verbose_name=_("Olympiad Field"))
+    olympiad_field = models.ForeignKey(OlympiadField, on_delete=models.CASCADE, verbose_name=_("Olympiad Field"))
     olympiad_student = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name=_("Student"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -57,7 +59,7 @@ class OlympiadReport(models.Model):
     olympiad_field = models.ForeignKey(OlympiadField, on_delete=models.CASCADE, verbose_name=_("Olympiad Field"))
     olympiad_practice_date = models.DateField(_("Olympiad Practice Date"))
     students = models.ManyToManyField(OlympiadStudent, verbose_name=_("Student's Presence"))
-    photo = CompressedImageField(upload_to='ekskul/osn', default='no-image.png', quality=50, help_text="Format foto harus .jpg atau .jpeg", verbose_name=_("Upload Photo"))
+    photo = CompressedImageField(upload_to=get_upload_file_name('ekskul/osn'), default='no-image.png', quality=50, help_text=_("photo format png/jpg"), verbose_name=_("Upload Photo"))
     notes = models.TextField(max_length=200, blank=True, verbose_name=_("Notes"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
