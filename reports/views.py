@@ -1,9 +1,11 @@
 from .models import Report
+from extracurricular.views import StudentExtracurricularSerializer
 from rest_framework import serializers, viewsets, permissions
 # Create your views here.
 
-
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
+    students = StudentExtracurricularSerializer(many=True, read_only=True)
+
     class Meta:
         model = Report
         fields = ['url', 'academic_year', 'created_at', 'extracurricular', 'extracurricular_id',\

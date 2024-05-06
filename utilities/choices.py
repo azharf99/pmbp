@@ -54,3 +54,23 @@ class_list = (
         ('XII-MIPA-G', 'XII-G'),
         ('XII-MIPA-H', 'XII-H'),
     )
+
+semester_choice = (
+    (None, _("Choose Semester")),
+    ("Ganjil", _("Odd")),
+    ("Genap", _("Even")),
+)
+
+olympiad_level = (
+    (None, _("Choose Olympiad Level")),
+    ("Sekolah", _("School")),
+    ("Kota/Kab", _("City/Regency")),
+    ("Provinsi", _("Province")),
+    ("Nasional", _("Nasional")),
+)
+
+grade_choice = (
+        ("A", "A"),
+        ("B", "B"),
+        ("C", "C"),
+)

@@ -29,10 +29,12 @@ class OlympiadStudentViewSet(viewsets.ModelViewSet):
 
 
 class OlympiadReportSerializer(serializers.HyperlinkedModelSerializer):
+    students = OlympiadStudentSerializer(many=True, read_only=True)
+
     class Meta:
         model = OlympiadReport
         fields = ['url', 'created_at', 'id', 'notes', 'olympiad_field', 'olympiad_field_id', 'olympiad_practice_date',\
-                   'olympiad_teacher', 'olympiad_teacher_id', 'photo', 'students', 'updated_at']
+                   'photo', 'students', 'updated_at']
 
 class OlympiadReportViewSet(viewsets.ModelViewSet):
     queryset = OlympiadReport.objects.all().order_by('-olympiad_practice_date')

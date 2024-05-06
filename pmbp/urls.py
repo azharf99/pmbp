@@ -14,8 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
 from rest_framework import routers
 from users.views import UserViewSet, GroupViewSet, TeacherViewSet, StudentViewSet
 from reports.views import ReportViewSet
@@ -24,6 +27,7 @@ from menus.views import MenuViewSet
 from grades.views import GradeViewSet
 from extracurricular.views import ExtracurricularViewSet, StudentExtracurricularViewSet
 from achievements.views import AchievementViewSet, AchievementPhotoViewSet, AchievementProgramViewSet
+from utilities.seeds import seedDatabase
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
@@ -43,9 +47,19 @@ router.register(r'achievements', AchievementViewSet)
 router.register(r'achievements_photos', AchievementPhotoViewSet)
 router.register(r'achievements_program', AchievementProgramViewSet)
 
+
+def home(request):
+    return HttpResponse("Home")
+
+
 urlpatterns = [
+    path('', home),
+    path('seed/', seedDatabase),
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path("__debug__/", include("debug_toolbar.urls")),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

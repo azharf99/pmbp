@@ -10,11 +10,8 @@ from utilities.utils import CompressedImageField
 from utilities.filenames import get_upload_file_name
 
 # Create your models here.
-
-
 class Extracurricular(models.Model):
     extracurricular_name = models.CharField(max_length=50, verbose_name=_("Extracurricular Name"))
-    extracurricular_teacher = models.ManyToManyField(Teacher, verbose_name=_("Extracurricular Teacher"))
     extracurricular_schedule = models.CharField(max_length=15, choices=WEEKDAYS, verbose_name=_("Extracurricular Schedule"))
     extracurricular_time = models.CharField(max_length=15, choices=extracurricular_times, verbose_name=_("Extracurricular Iime"))
     extracurricular_description = models.TextField(blank=True, null=True, verbose_name=_("Extracurricular Description"))
@@ -64,4 +61,27 @@ class StudentExtracurricular(models.Model):
         verbose_name = _("Student Extracurricular")
         verbose_name_plural = _("Student Extracurricular Activities")
         ordering = ["extracurricular__extracurricular_name"]
-        db_table = "student_extracurricular"
+        db_table = "extracurricular_students"
+
+
+class TeacherExtracurricular(models.Model):
+    extracurricular = models.ForeignKey(Extracurricular, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    academic_year = models.CharField(max_length=50, default=f"{timezone.now().year}/{timezone.now().year+1}", verbose_name=_("Academic Year"))
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.extracurricular} {self.teacher}"
+
+    def get_absolute_url(self):
+        return reverse("extracurricular:teacher-extracurricular-index")
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=["id"]),
+        ]
+        verbose_name = _("Teacher Extracurricular")
+        verbose_name_plural = _("Teacher Extracurricular Activities")
+        ordering = ["extracurricular__extracurricular_name"]
+        db_table = "extracurricular_teachers"

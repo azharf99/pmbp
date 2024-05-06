@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+# import io
 import os
+# from urllib.parse import urlparse
+# import environ
+# from google.cloud import secretmanager
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -30,8 +34,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -44,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'rest_framework',
+    'storages',
     'users',
     'reports',
     'olympiads',
@@ -89,12 +94,11 @@ WSGI_APPLICATION = 'pmbp.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -131,6 +135,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "staticfiles",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -151,3 +160,15 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+
+
+# Google Storage Settings
+# DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_CREDENTIALS = BASE_DIR / 'key.json'
+DEFAULT_FILE_STORAGE = 'pmbp.gcloud.GoogleCloudMediaFileStorage'
+GS_PROJECT_ID = os.getenv('GS_PROJECT_ID')
+GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME')
+MEDIA_ROOT = os.getenv('MEDIA_ROOT')
+UPLOAD_ROOT = os.getenv('UPLOAD_ROOT')
+MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+# MEDIA_ROOT = f'gs://{GS_BUCKET_NAME}/'
